@@ -33,6 +33,7 @@ type Settings = {
   casinoName: string;
   codeLabel: string;
   logoUrl?: string | null;
+  promoUrl?: string | null;
   endAt: Date | string;
   refreshSeconds: number;
   movementLookbackMinutes: number;
@@ -53,6 +54,7 @@ export default function AdminSettingsForm({ settings }: { settings: Settings }) 
   const [casinoName, setCasinoName] = useState(settings.casinoName);
   const [codeLabel, setCodeLabel] = useState(settings.codeLabel);
   const [logoUrl, setLogoUrl] = useState(settings.logoUrl || '');
+  const [promoUrl, setPromoUrl] = useState(settings.promoUrl || '');
   const [endAt, setEndAt] = useState(new Date(settings.endAt).toISOString().slice(0, 16));
   const [refreshSeconds, setRefreshSeconds] = useState(String(settings.refreshSeconds));
   const [movementLookbackMinutes, setMovementLookbackMinutes] = useState(String(settings.movementLookbackMinutes));
@@ -69,6 +71,7 @@ export default function AdminSettingsForm({ settings }: { settings: Settings }) 
           casinoName,
           codeLabel,
           logoUrl,
+          promoUrl,
           endAt,
           refreshSeconds,
           movementLookbackMinutes
@@ -99,7 +102,11 @@ export default function AdminSettingsForm({ settings }: { settings: Settings }) 
         <input value={codeLabel} onChange={(e) => setCodeLabel(e.target.value)} placeholder="NATHAN" style={inputStyle} />
       </Field>
 
-      <Field label="Logo URL" hint="Optional. Paste a full image URL for the logo box on the leaderboard.">
+      <Field label="Promo Link URL" hint="Both the logo and the 'Use code ...' text will link here.">
+        <input value={promoUrl} onChange={(e) => setPromoUrl(e.target.value)} placeholder="https://..." style={inputStyle} />
+      </Field>
+
+      <Field label="Logo URL" hint="Optional. Paste a full image URL for the leaderboard logo.">
         <input value={logoUrl} onChange={(e) => setLogoUrl(e.target.value)} placeholder="https://..." style={inputStyle} />
       </Field>
 

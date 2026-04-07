@@ -3,6 +3,7 @@ export const mockSettings = {
   casinoName: 'Roobet',
   codeLabel: 'TRIVOLUTION',
   logoUrl: '',
+  promoUrl: '',
   endAt: new Date(Date.now() + 26 * 24 * 60 * 60 * 1000),
   refreshSeconds: 60,
   movementLookbackMinutes: 30

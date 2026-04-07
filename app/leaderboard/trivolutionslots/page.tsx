@@ -9,6 +9,16 @@ import { SyncStatusBadge } from '../../../components/sync-status-badge';
 import { prisma } from '../../../lib/prisma';
 import { getPrizes, getSettings } from '../../../lib/settings';
 
+function isValidUrl(value?: string | null) {
+  if (!value) return false;
+  try {
+    new URL(value);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export default async function LeaderboardPage() {
   const settings = await getSettings();
   const prizes = await getPrizes();
@@ -61,122 +71,157 @@ export default async function LeaderboardPage() {
   });
 
   const [first, second, third, ...rest] = entriesWithMovement;
+  const promoUrl = isValidUrl(settings.promoUrl) ? settings.promoUrl : null;
 
-  const prize = (rank: number) =>
-    prizes.find((p) => p.rank === rank)?.prizeLabel || '$0';
+  const prize = (rank: number) => prizes.find((p) => p.rank === rank)?.prizeLabel || '$0';
 
   return (
     <main style={{ maxWidth: 1280, minHeight: '100vh', margin: '0 auto', padding: '26px 20px 80px' }}>
-
-      {/* HEADER */}
       <header style={{ display: 'flex', justifyContent: 'space-between', gap: 20, flexWrap: 'wrap', alignItems: 'flex-start' }}>
         <div>
-          <div style={{
-            display: 'inline-flex',
-            padding: '8px 14px',
-            borderRadius: 999,
-            border: '1px solid rgba(255,255,255,0.08)',
-            background: 'rgba(255,255,255,0.05)',
-            fontWeight: 700,
-            fontSize: 14,
-            color: '#d7c18a'
-          }}>
+          <div
+            style={{
+              display: 'inline-flex',
+              padding: '8px 14px',
+              borderRadius: 999,
+              border: '1px solid rgba(255,255,255,0.08)',
+              background: 'rgba(255,255,255,0.05)',
+              fontWeight: 700,
+              fontSize: 14,
+              color: '#d7c18a'
+            }}
+          >
             {settings.casinoName} Wager Race
           </div>
 
-          <h1 style={{ fontSize: 52, lineHeight: 0.95, margin: '14px 0 10px' }}>
-            {settings.title}
-          </h1>
+          <h1 style={{ fontSize: 52, lineHeight: 0.95, margin: '14px 0 10px' }}>{settings.title}</h1>
 
           <div style={{ marginTop: 14 }}>
-            <SyncStatusBadge
-              status={latestSync?.status}
-              syncedAt={latestSync?.syncedAt}
-              message={latestSync?.message}
-            />
+            <SyncStatusBadge status={latestSync?.status} syncedAt={latestSync?.syncedAt} message={latestSync?.message} />
           </div>
         </div>
 
-        <Link href="/admin" style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: 8,
-          padding: '14px 18px',
-          borderRadius: 18,
-          background: 'linear-gradient(180deg, #d7c18a, #b89f63)',
-          color: '#10202f',
-          fontWeight: 800
-        }}>
+        <Link
+          href="/admin"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 8,
+            padding: '14px 18px',
+            borderRadius: 18,
+            background: 'linear-gradient(180deg, #d7c18a, #b89f63)',
+            color: '#10202f',
+            fontWeight: 800
+          }}
+        >
           <Settings2 size={16} /> Admin
         </Link>
       </header>
 
-      {/* HERO CARD */}
       <section style={{ textAlign: 'center', marginTop: 20 }}>
-        <div style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: 8,
-          padding: '10px 16px',
-          borderRadius: 999,
-          border: '1px solid rgba(215,193,138,0.18)',
-          background: 'rgba(215,193,138,0.07)',
-          color: '#d7c18a',
-          fontWeight: 700
-        }}>
+        <div
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 8,
+            padding: '10px 16px',
+            borderRadius: 999,
+            border: '1px solid rgba(215,193,138,0.18)',
+            background: 'rgba(215,193,138,0.07)',
+            color: '#d7c18a',
+            fontWeight: 700
+          }}
+        >
           <Medal size={16} /> Live leaderboard
         </div>
 
-        <div style={{
-          maxWidth: 820,
-          margin: '18px auto 0',
-          borderRadius: 22,
-          border: '1px solid rgba(255,255,255,0.07)',
-          background: 'linear-gradient(180deg, rgba(28,52,73,0.96), rgba(19,37,54,0.96))',
-          padding: 20
-        }}>
+        <div
+          style={{
+            maxWidth: 820,
+            margin: '18px auto 0',
+            borderRadius: 22,
+            border: '1px solid rgba(255,255,255,0.07)',
+            background: 'linear-gradient(180deg, rgba(28,52,73,0.96), rgba(19,37,54,0.96))',
+            padding: 20
+          }}
+        >
           <div style={{ textAlign: 'left', display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'center' }}>
             <div>
               <div style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.24em', color: 'rgba(247,243,234,0.56)' }}>
                 How to enter
               </div>
-              <div style={{ marginTop: 10, fontSize: 24, fontWeight: 900 }}>
-                Use code <span style={{ color: '#d7c18a' }}>{settings.codeLabel}</span>
-              </div>
+
+              {promoUrl ? (
+                <a
+                  href={promoUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{
+                    marginTop: 10,
+                    fontSize: 24,
+                    fontWeight: 900,
+                    color: 'inherit',
+                    textDecoration: 'none',
+                    display: 'inline-block'
+                  }}
+                >
+                  Use code <span style={{ color: '#d7c18a' }}>{settings.codeLabel}</span>
+                </a>
+              ) : (
+                <div style={{ marginTop: 10, fontSize: 24, fontWeight: 900 }}>
+                  Use code <span style={{ color: '#d7c18a' }}>{settings.codeLabel}</span>
+                </div>
+              )}
             </div>
 
-            {/* LOGO — CLEAN (NO BOX) */}
-            {settings.logoUrl && (
-              <img
-                src={settings.logoUrl}
-                alt="Logo"
-                style={{
-                  width: 110,
-                  height: 110,
-                  objectFit: 'contain',
-                  flexShrink: 0
-                }}
-              />
-            )}
+            {settings.logoUrl ? (
+              promoUrl ? (
+                <a href={promoUrl} target="_blank" rel="noreferrer" style={{ display: 'inline-flex', flexShrink: 0 }}>
+                  <img
+                    src={settings.logoUrl}
+                    alt="Logo"
+                    style={{
+                      width: 110,
+                      height: 110,
+                      objectFit: 'contain',
+                      flexShrink: 0
+                    }}
+                  />
+                </a>
+              ) : (
+                <img
+                  src={settings.logoUrl}
+                  alt="Logo"
+                  style={{
+                    width: 110,
+                    height: 110,
+                    objectFit: 'contain',
+                    flexShrink: 0
+                  }}
+                />
+              )
+            ) : null}
           </div>
         </div>
       </section>
 
-      {/* TOP 3 */}
       <section style={{ maxWidth: 1060, margin: '44px auto 0', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 32, alignItems: 'start' }}>
-        <div style={{ marginTop: 40 }}><RankCard entry={second} prizeLabel={prize(2)} /></div>
-        <div><RankCard entry={first} featured prizeLabel={prize(1)} /></div>
-        <div style={{ marginTop: 56 }}><RankCard entry={third} prizeLabel={prize(3)} /></div>
+        <div style={{ marginTop: 40 }}>
+          <RankCard entry={second} prizeLabel={prize(2)} />
+        </div>
+        <div>
+          <RankCard entry={first} featured prizeLabel={prize(1)} />
+        </div>
+        <div style={{ marginTop: 56 }}>
+          <RankCard entry={third} prizeLabel={prize(3)} />
+        </div>
       </section>
 
-      {/* TIMER */}
       <section style={{ display: 'flex', justifyContent: 'center', marginTop: 12 }}>
         <Countdown endAt={new Date(settings.endAt)} />
       </section>
 
-      {/* LIST */}
       <LeaderboardList entries={rest} />
-
     </main>
   );
 }

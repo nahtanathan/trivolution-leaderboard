@@ -30,6 +30,7 @@ model LeaderboardSettings {
   casinoName              String
   codeLabel               String
   logoUrl                 String?
+  promoUrl                String?
   endAt                   DateTime
   refreshSeconds          Int
   movementLookbackMinutes Int

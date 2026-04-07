@@ -25,10 +25,10 @@ function medalStyle(rank: number, featured: boolean): React.CSSProperties {
 
   const gradient =
     rank === 1
-      ? 'linear-gradient(180deg, #f7d774, #d4af37)' // gold
+      ? 'linear-gradient(180deg, #f7d774, #d4af37)'
       : rank === 2
-      ? 'linear-gradient(180deg, #e5e7eb, #9ca3af)' // silver
-      : 'linear-gradient(180deg, #d8a47f, #a16207)'; // bronze
+        ? 'linear-gradient(180deg, #e5e7eb, #9ca3af)'
+        : 'linear-gradient(180deg, #d8a47f, #a16207)';
 
   return {
     width: size,
@@ -71,7 +71,6 @@ export function RankCard({
         minHeight: featured ? 308 : 292
       }}
     >
-      {/* subtle top glow */}
       <div
         style={{
           position: 'absolute',
@@ -81,7 +80,6 @@ export function RankCard({
         }}
       />
 
-      {/* top bar */}
       <div
         style={{
           position: 'absolute',
@@ -114,9 +112,7 @@ export function RankCard({
         <div>{movementNode(entry.movement)}</div>
       </div>
 
-      {/* main */}
       <div style={{ textAlign: 'center', paddingTop: featured ? 10 : 18 }}>
-        {/* big faded rank */}
         <div
           style={{
             fontSize: featured ? 84 : 74,
@@ -130,19 +126,16 @@ export function RankCard({
           {largeRank(entry.rank)}
         </div>
 
-        {/* premium medal */}
         <div style={{ margin: '-12px auto 14px', display: 'flex', justifyContent: 'center' }}>
           <div style={medalStyle(entry.rank, featured)}>
             {entry.rank}
           </div>
         </div>
 
-        {/* username */}
         <div style={{ fontWeight: 800, fontSize: featured ? 16 : 15, minHeight: 22 }}>
           {maskUsername(entry.username)}
         </div>
 
-        {/* wager */}
         <div style={{ marginTop: 20, fontWeight: 800, fontSize: featured ? 18 : 16 }}>
           {formatMoney(entry.weightedWagered)}
         </div>
@@ -150,7 +143,6 @@ export function RankCard({
           Wagered
         </div>
 
-        {/* prize */}
         <div
           style={{
             marginTop: 18,
