@@ -221,7 +221,7 @@ export default async function LeaderboardPage() {
         <Countdown endAt={new Date(settings.endAt)} />
       </section>
 
-      <LeaderboardList entries={rest} />
+      <LeaderboardList entries={rest} prizeForRank={prize} />
     </main>
   );
 }
