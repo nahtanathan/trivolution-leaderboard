@@ -23,7 +23,7 @@ export async function POST(req: Request) {
       codeLabel: String(body.codeLabel || 'TRIVOLUTION').trim(),
       logoUrl: body.logoUrl ? String(body.logoUrl).trim() : null,
       promoUrl,
-      endAt: body.endAt ? new Date(body.endAt) : new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+      endAt: body.endAt ? new Date(body.endAt) : new Date(Date.now() + 14 * 24 * 60 * 60 * 1000)
       refreshSeconds: Math.max(5, Number(body.refreshSeconds || 60)),
       movementLookbackMinutes: Math.max(1, Number(body.movementLookbackMinutes || 30))
     };
