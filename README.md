@@ -1,6 +1,6 @@
 # TrivolutionSlots Leaderboard
 
-This build is set up for Next.js on Vercel with Neon Postgres and Prisma, using **cron-job.org** instead of Vercel Cron.
+This build is set up for Next.js on Vercel with Neon Postgres and Prisma.
 
 ## Required environment variables
 - `ADMIN_PASSWORD`
@@ -22,28 +22,12 @@ npm run dev
 1. Import the repo into Vercel.
 2. Add all env vars from `.env.example`.
 3. Redeploy.
-
-## cron-job.org setup
-Create a job that sends a `GET` request to:
-
-```text
-https://your-domain.com/api/cron
-```
-
-Add this request header:
-
-```text
-Authorization: Bearer YOUR_CRON_SECRET
-```
-
-Recommended interval:
-- every 15 minutes
+4. Confirm the cron is present in Vercel and points to `/api/cron`.
 
 ## Notes
-- This project does **not** use Vercel Cron.
-- Build runs `prisma db push` so Neon tables are created during deploy.
+- Build now runs `prisma db push` so Neon tables are created during deploy.
 - Admin settings save to `LeaderboardSettings`.
 - Prize save uses Prisma upsert for each rank.
 - Manual sync is `/api/sync`.
-- External cron sync is `/api/cron` and accepts `Authorization: Bearer <CRON_SECRET>`.
+- Cron sync is `/api/cron` and accepts `Authorization: Bearer <CRON_SECRET>`.
 - `/api/cron/sync` redirects to `/api/cron` for backward compatibility.

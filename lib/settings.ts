@@ -7,7 +7,13 @@ export async function getSettings() {
       orderBy: { createdAt: 'asc' }
     });
 
-    return settings ?? mockSettings;
+    return settings
+      ? {
+          ...settings,
+          promoUrl: settings.promoUrl ?? '',
+          wagerWindowStartAt: settings.wagerWindowStartAt ?? mockSettings.wagerWindowStartAt
+        }
+      : mockSettings;
   } catch {
     return mockSettings;
   }

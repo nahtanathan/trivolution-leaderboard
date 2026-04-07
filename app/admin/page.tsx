@@ -97,7 +97,7 @@ export default async function AdminPage() {
         </div>
 
         <div style={card}>
-          <h2 style={{ marginTop: 0 }}>Branding + Timer</h2>
+          <h2 style={{ marginTop: 0 }}>Branding + Contest Window</h2>
           <AdminSettingsForm settings={settings} />
         </div>
       </section>

@@ -1,4 +1,5 @@
 import { prisma } from './prisma';
+import { getSettings } from './settings';
 
 const API_URL = 'https://roobetconnect.com/affiliate/v2/stats';
 
@@ -9,6 +10,11 @@ type LeaderboardRow = {
   wagered: number;
   weightedWagered: number;
   rank: number;
+};
+
+type FetchAffiliateOptions = {
+  startDate?: Date | string | null;
+  endDate?: Date | string | null;
 };
 
 function generateMockData() {
@@ -60,16 +66,36 @@ async function upsertSyncStatus(source: SyncSource, status: string, message?: st
   });
 }
 
-async function fetchLiveRows() {
-  const res = await fetch(
-    `${API_URL}?userId=${process.env.ROOBET_USER_ID}&sortBy=wagered&categories=slots,provably%20fair`,
-    {
-      headers: {
-        Authorization: `Bearer ${process.env.ROOBET_API_KEY}`
-      },
-      cache: 'no-store'
-    }
-  );
+function buildRoobetUrl(options: FetchAffiliateOptions = {}) {
+  const url = new URL(API_URL);
+  url.searchParams.set('userId', String(process.env.ROOBET_USER_ID ?? ''));
+  url.searchParams.set('sortBy', 'wagered');
+  url.searchParams.set('categories', 'slots,provably fair');
+
+  if (options.startDate) {
+    url.searchParams.set('startDate', new Date(options.startDate).toISOString());
+  }
+
+  if (options.endDate) {
+    url.searchParams.set('endDate', new Date(options.endDate).toISOString());
+  }
+
+  return url.toString();
+}
+
+export async function fetchAffiliateRows(options: FetchAffiliateOptions = {}) {
+  if (!process.env.ROOBET_API_KEY || !process.env.ROOBET_USER_ID) {
+    return generateMockData()
+      .sort((a, b) => b.weightedWagered - a.weightedWagered)
+      .map((u, i) => ({ ...u, rank: i + 1 })) satisfies LeaderboardRow[];
+  }
+
+  const res = await fetch(buildRoobetUrl(options), {
+    headers: {
+      Authorization: `Bearer ${process.env.ROOBET_API_KEY}`
+    },
+    cache: 'no-store'
+  });
 
   const data = await res.json();
 
@@ -96,11 +122,11 @@ async function fetchLiveRows() {
 
 export async function runLeaderboardSync(source: SyncSource) {
   try {
-    const sorted: LeaderboardRow[] = !process.env.ROOBET_API_KEY || !process.env.ROOBET_USER_ID
-      ? generateMockData()
-          .sort((a, b) => b.weightedWagered - a.weightedWagered)
-          .map((u, i) => ({ ...u, rank: i + 1 }))
-      : await fetchLiveRows();
+    const settings = await getSettings();
+    const sorted = await fetchAffiliateRows({
+      startDate: settings.wagerWindowStartAt,
+      endDate: settings.endAt
+    });
 
     await prisma.$transaction(async (tx) => {
       await tx.leaderboardEntry.deleteMany();
@@ -111,12 +137,21 @@ export async function runLeaderboardSync(source: SyncSource) {
       }
     });
 
-    await upsertSyncStatus(source, 'success', null);
+    const mode = process.env.ROOBET_API_KEY && process.env.ROOBET_USER_ID ? 'live' : 'mock';
+    await upsertSyncStatus(
+      source,
+      'success',
+      `${mode} sync for ${new Date(settings.wagerWindowStartAt ?? Date.now()).toISOString()} → ${new Date(settings.endAt).toISOString()}`
+    );
 
     return {
       success: true,
       count: sorted.length,
-      mode: process.env.ROOBET_API_KEY && process.env.ROOBET_USER_ID ? 'live' : 'mock'
+      mode,
+      appliedWindow: {
+        startDate: settings.wagerWindowStartAt,
+        endDate: settings.endAt
+      }
     };
   } catch (error: any) {
     await upsertSyncStatus(source, 'error', error?.message ?? 'Unknown error');

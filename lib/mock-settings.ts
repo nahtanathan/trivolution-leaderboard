@@ -1,17 +1,20 @@
+const now = Date.now();
+
 export const mockSettings = {
   title: 'TrivolutionSlots',
   casinoName: 'Roobet',
   codeLabel: 'TRIVOLUTION',
   logoUrl: '',
   promoUrl: '',
-  endAt: new Date(Date.now() + 26 * 24 * 60 * 60 * 1000),
+  endAt: new Date(now + 26 * 24 * 60 * 60 * 1000),
+  wagerWindowStartAt: new Date(now - 24 * 60 * 60 * 1000),
   refreshSeconds: 60,
   movementLookbackMinutes: 30
 };
 
 export const mockPrizes = [
   { rank: 1, prizeLabel: '$100' },
-  { rank: 2, prizeLabel: '50' },
+  { rank: 2, prizeLabel: '$50' },
   { rank: 3, prizeLabel: '$25' },
   { rank: 4, prizeLabel: '$15' },
   { rank: 5, prizeLabel: '$10' },

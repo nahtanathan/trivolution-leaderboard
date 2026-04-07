@@ -32,6 +32,7 @@ model LeaderboardSettings {
   logoUrl                 String?
   promoUrl                String?
   endAt                   DateTime
+  wagerWindowStartAt      DateTime?
   refreshSeconds          Int
   movementLookbackMinutes Int
   createdAt               DateTime @default(now())

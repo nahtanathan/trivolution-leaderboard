@@ -27,8 +27,8 @@ function medalStyle(rank: number, featured: boolean): React.CSSProperties {
     rank === 1
       ? 'linear-gradient(180deg, #f7d774, #d4af37)'
       : rank === 2
-        ? 'linear-gradient(180deg, #e5e7eb, #9ca3af)'
-        : 'linear-gradient(180deg, #d8a47f, #a16207)';
+      ? 'linear-gradient(180deg, #e5e7eb, #9ca3af)'
+      : 'linear-gradient(180deg, #d8a47f, #a16207)';
 
   return {
     width: size,
@@ -127,9 +127,7 @@ export function RankCard({
         </div>
 
         <div style={{ margin: '-12px auto 14px', display: 'flex', justifyContent: 'center' }}>
-          <div style={medalStyle(entry.rank, featured)}>
-            {entry.rank}
-          </div>
+          <div style={medalStyle(entry.rank, featured)}>{entry.rank}</div>
         </div>
 
         <div style={{ fontWeight: 800, fontSize: featured ? 16 : 15, minHeight: 22 }}>

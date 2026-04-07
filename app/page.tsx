@@ -24,11 +24,8 @@ export default function HomePage() {
           Production starter
         </div>
         <h1 style={{ fontSize: 54, lineHeight: 0.98, margin: '18px 0 12px' }}>
-          Trivolution Leaderboard
+          TrivolutionSlots Leaderboard
         </h1>
-        <p style={{ color: 'rgba(247,243,234,0.7)', fontSize: 18, maxWidth: 760 }}>
-          
-        </p>
         <div style={{ display: 'flex', gap: 12, marginTop: 24, flexWrap: 'wrap' }}>
           <Link href="/leaderboard/trivolutionslots" style={{
             background: 'linear-gradient(180deg, #d7c18a, #b89f63)',

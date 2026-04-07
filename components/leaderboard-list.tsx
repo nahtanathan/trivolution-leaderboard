@@ -41,18 +41,9 @@ export function LeaderboardList({
               border: '1px solid rgba(255,255,255,0.07)'
             }}
           >
-            <div style={{ fontWeight: 900, fontSize: 22, color: '#d7c18a' }}>
-              #{entry.rank}
-            </div>
-
-            <div style={{ fontWeight: 700, fontSize: 18 }}>
-              {maskUsername(entry.username)}
-            </div>
-
-            <div style={{ fontWeight: 800, textAlign: 'right' }}>
-              {formatMoney(entry.weightedWagered)}
-            </div>
-
+            <div style={{ fontWeight: 900, fontSize: 22, color: '#d7c18a' }}>#{entry.rank}</div>
+            <div style={{ fontWeight: 700, fontSize: 18 }}>{maskUsername(entry.username)}</div>
+            <div style={{ fontWeight: 800, textAlign: 'right' }}>{formatMoney(entry.weightedWagered)}</div>
             <div
               style={{
                 textAlign: 'center',
@@ -65,10 +56,7 @@ export function LeaderboardList({
             >
               {prizeForRank(entry.rank)}
             </div>
-
-            <div style={{ textAlign: 'right' }}>
-              <Movement movement={entry.movement} />
-            </div>
+            <div style={{ textAlign: 'right' }}><Movement movement={entry.movement} /></div>
           </div>
         ))}
       </div>

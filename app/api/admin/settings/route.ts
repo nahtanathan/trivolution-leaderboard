@@ -14,7 +14,6 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-
     const promoUrl = body.promoUrl ? String(body.promoUrl).trim() : null;
 
     const payload = {
@@ -24,12 +23,21 @@ export async function POST(req: Request) {
       logoUrl: body.logoUrl ? String(body.logoUrl).trim() : null,
       promoUrl,
       endAt: body.endAt ? new Date(body.endAt) : new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+      wagerWindowStartAt: body.wagerWindowStartAt ? new Date(body.wagerWindowStartAt) : null,
       refreshSeconds: Math.max(5, Number(body.refreshSeconds || 60)),
       movementLookbackMinutes: Math.max(1, Number(body.movementLookbackMinutes || 30))
     };
 
     if (Number.isNaN(payload.endAt.getTime())) {
-      return Response.json({ error: 'Invalid end date' }, { status: 400 });
+      return Response.json({ error: 'Invalid countdown end date' }, { status: 400 });
+    }
+
+    if (payload.wagerWindowStartAt && Number.isNaN(payload.wagerWindowStartAt.getTime())) {
+      return Response.json({ error: 'Invalid wager window start date' }, { status: 400 });
+    }
+
+    if (payload.wagerWindowStartAt && payload.wagerWindowStartAt >= payload.endAt) {
+      return Response.json({ error: 'Wager window start must be before end date' }, { status: 400 });
     }
 
     if (promoUrl) {

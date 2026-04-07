@@ -1,23 +1,39 @@
-export function utcIsoToLocalInputValue(value?: string | Date | null) {
-  if (!value) return '';
+export function toLocalInputValue(date: Date | string | null | undefined) {
+  if (!date) return '';
+  const d = new Date(date);
+  if (Number.isNaN(d.getTime())) return '';
 
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return '';
-
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  const hours = String(d.getHours()).padStart(2, '0');
+  const minutes = String(d.getMinutes()).padStart(2, '0');
 
   return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
 
-export function localInputValueToUtcIso(value: string) {
+export function localInputToUtcIso(value: string) {
   if (!value) return '';
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return '';
+  return d.toISOString();
+}
 
-  const localDate = new Date(value);
-  if (Number.isNaN(localDate.getTime())) return '';
+export function formatUtcRange(start?: Date | string | null, end?: Date | string | null) {
+  const startDate = start ? new Date(start) : null;
+  const endDate = end ? new Date(end) : null;
+  if (!startDate || Number.isNaN(startDate.getTime()) || !endDate || Number.isNaN(endDate.getTime())) {
+    return 'All-time totals';
+  }
 
-  return localDate.toISOString();
+  const fmt = new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    timeZone: 'UTC'
+  });
+
+  return `${fmt.format(startDate)} UTC → ${fmt.format(endDate)} UTC`;
 }
