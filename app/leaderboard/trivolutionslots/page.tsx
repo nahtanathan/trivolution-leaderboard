@@ -90,7 +90,7 @@ export default async function LeaderboardPage() {
           </h1>
 
           <p style={{ maxWidth: 760, color: 'rgba(247,243,234,0.65)', fontSize: 17 }}>
-            Clean featured top 3 with movement tracking, countdown, and a Roobet-style dark blue premium layout.
+           
           </p>
 
           <div style={{ marginTop: 14 }}>
@@ -148,7 +148,7 @@ export default async function LeaderboardPage() {
                 Use code <span style={{ color: '#d7c18a' }}>{settings.codeLabel}</span> on {settings.casinoName}
               </div>
               <div style={{ marginTop: 6, color: 'rgba(247,243,234,0.72)' }}>
-                Your wagering updates the public leaderboard automatically after sync.
+                
               </div>
             </div>
 
