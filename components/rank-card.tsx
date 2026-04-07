@@ -20,10 +20,31 @@ function largeRank(rank: number) {
   return `#${rank}`;
 }
 
-function accentForRank(rank: number) {
-  if (rank === 1) return '#d7c18a';
-  if (rank === 2) return '#c7d2df';
-  return '#c49b7a';
+function medalStyle(rank: number, featured: boolean): React.CSSProperties {
+  const size = featured ? 72 : 60;
+
+  const gradient =
+    rank === 1
+      ? 'linear-gradient(180deg, #f7d774, #d4af37)' // gold
+      : rank === 2
+      ? 'linear-gradient(180deg, #e5e7eb, #9ca3af)' // silver
+      : 'linear-gradient(180deg, #d8a47f, #a16207)'; // bronze
+
+  return {
+    width: size,
+    height: size,
+    borderRadius: '50%',
+    display: 'grid',
+    placeItems: 'center',
+    fontWeight: 900,
+    fontSize: featured ? 26 : 22,
+    color: '#0b1a24',
+    background: gradient,
+    boxShadow:
+      rank === 1
+        ? '0 0 20px rgba(212,175,55,0.45), 0 10px 25px rgba(0,0,0,0.35)'
+        : '0 8px 20px rgba(0,0,0,0.35)'
+  };
 }
 
 export function RankCard({
@@ -36,7 +57,6 @@ export function RankCard({
   prizeLabel?: string;
 }) {
   if (!entry) return null;
-  const accent = accentForRank(entry.rank);
 
   return (
     <div
@@ -51,74 +71,78 @@ export function RankCard({
         minHeight: featured ? 308 : 292
       }}
     >
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        background: 'radial-gradient(circle at 50% 0%, rgba(255,255,255,0.05), transparent 34%)',
-        pointerEvents: 'none'
-      }} />
+      {/* subtle top glow */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'radial-gradient(circle at 50% 0%, rgba(255,255,255,0.05), transparent 34%)',
+          pointerEvents: 'none'
+        }}
+      />
 
-      <div style={{
-        position: 'absolute',
-        top: 10,
-        left: 12,
-        right: 12,
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-      }}>
-        <div style={{
-          minWidth: 30,
-          height: 30,
-          padding: '0 10px',
-          borderRadius: 999,
-          background: 'rgba(255,255,255,0.08)',
-          border: '1px solid rgba(255,255,255,0.08)',
-          color: accent,
-          display: 'grid',
-          placeItems: 'center',
-          fontWeight: 900,
-          fontSize: 14
-        }}>
+      {/* top bar */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 10,
+          left: 12,
+          right: 12,
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}
+      >
+        <div
+          style={{
+            minWidth: 30,
+            height: 30,
+            padding: '0 10px',
+            borderRadius: 999,
+            background: 'rgba(255,255,255,0.08)',
+            border: '1px solid rgba(255,255,255,0.08)',
+            color: '#d7c18a',
+            display: 'grid',
+            placeItems: 'center',
+            fontWeight: 900,
+            fontSize: 14
+          }}
+        >
           {entry.rank}
         </div>
+
         <div>{movementNode(entry.movement)}</div>
       </div>
 
+      {/* main */}
       <div style={{ textAlign: 'center', paddingTop: featured ? 10 : 18 }}>
-        <div style={{
-          fontSize: featured ? 84 : 74,
-          lineHeight: 0.88,
-          fontWeight: 900,
-          color: 'rgba(7,17,24,0.18)',
-          letterSpacing: '-0.04em',
-          userSelect: 'none'
-        }}>
+        {/* big faded rank */}
+        <div
+          style={{
+            fontSize: featured ? 84 : 74,
+            lineHeight: 0.88,
+            fontWeight: 900,
+            color: 'rgba(7,17,24,0.18)',
+            letterSpacing: '-0.04em',
+            userSelect: 'none'
+          }}
+        >
           {largeRank(entry.rank)}
         </div>
 
-        <div style={{
-          width: featured ? 74 : 66,
-          height: featured ? 74 : 66,
-          margin: '-18px auto 12px',
-          borderRadius: 22,
-          background: 'linear-gradient(180deg, #12283d, #0a1c2b)',
-          display: 'grid',
-          placeItems: 'center',
-          border: '1px solid rgba(255,255,255,0.05)'
-        }}>
-          <div style={{
-            width: featured ? 34 : 30,
-            height: featured ? 34 : 30,
-            borderRadius: 10,
-            background: `linear-gradient(180deg, ${accent}, rgba(255,255,255,0.35))`
-          }} />
+        {/* premium medal */}
+        <div style={{ margin: '-12px auto 14px', display: 'flex', justifyContent: 'center' }}>
+          <div style={medalStyle(entry.rank, featured)}>
+            {entry.rank}
+          </div>
         </div>
 
+        {/* username */}
         <div style={{ fontWeight: 800, fontSize: featured ? 16 : 15, minHeight: 22 }}>
           {maskUsername(entry.username)}
         </div>
 
+        {/* wager */}
         <div style={{ marginTop: 20, fontWeight: 800, fontSize: featured ? 18 : 16 }}>
           {formatMoney(entry.weightedWagered)}
         </div>
@@ -126,15 +150,18 @@ export function RankCard({
           Wagered
         </div>
 
-        <div style={{
-          marginTop: 18,
-          borderRadius: 8,
-          background: 'linear-gradient(180deg, #081725, #091a29)',
-          padding: '12px 14px',
-          fontWeight: 900,
-          fontSize: featured ? 20 : 18,
-          color: '#f5efe3'
-        }}>
+        {/* prize */}
+        <div
+          style={{
+            marginTop: 18,
+            borderRadius: 8,
+            background: 'linear-gradient(180deg, #081725, #091a29)',
+            padding: '12px 14px',
+            fontWeight: 900,
+            fontSize: featured ? 20 : 18,
+            color: '#f5efe3'
+          }}
+        >
           {prizeLabel || '$ 0'}
         </div>
       </div>

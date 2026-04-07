@@ -24,7 +24,7 @@ export default function HomePage() {
           Production starter
         </div>
         <h1 style={{ fontSize: 54, lineHeight: 0.98, margin: '18px 0 12px' }}>
-          TrivolutionSlots Leaderboard
+          Trivolution Leaderboard
         </h1>
         <p style={{ color: 'rgba(247,243,234,0.7)', fontSize: 18, maxWidth: 760 }}>
           
