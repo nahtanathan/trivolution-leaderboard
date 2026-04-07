@@ -1,0 +1,56 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model LeaderboardEntry {
+  id              String   @id @default(cuid())
+  username        String
+  wagered         Float
+  weightedWagered Float
+  rank            Int
+}
+
+model LeaderboardSnapshot {
+  id              String   @id @default(cuid())
+  username        String
+  wagered         Float
+  weightedWagered Float
+  rank            Int
+  createdAt       DateTime @default(now())
+}
+
+model LeaderboardSettings {
+  id                      String   @id @default(cuid())
+  title                   String
+  casinoName              String
+  codeLabel               String
+  logoUrl                 String?
+  endAt                   DateTime
+  refreshSeconds          Int
+  movementLookbackMinutes Int
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+}
+
+model LeaderboardPrize {
+  id         String   @id @default(cuid())
+  rank       Int      @unique
+  prizeLabel String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model SyncStatus {
+  id            String   @id @default(cuid())
+  source        String
+  status        String
+  message       String?
+  syncedAt      DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
