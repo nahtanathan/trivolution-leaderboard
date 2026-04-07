@@ -29,7 +29,7 @@ export default async function LeaderboardPage() {
   if (!entries.length) {
     return (
       <main style={{ minHeight: '100vh', padding: 40, color: 'white' }}>
-        No leaderboard data yet. Log into admin and run sync first.
+        No leaderboard data yet. Run sync in admin.
       </main>
     );
   }
@@ -60,16 +60,15 @@ export default async function LeaderboardPage() {
     };
   });
 
-  const first = entriesWithMovement[0];
-  const second = entriesWithMovement[1];
-  const third = entriesWithMovement[2];
-  const rest = entriesWithMovement.slice(3);
+  const [first, second, third, ...rest] = entriesWithMovement;
 
   const prize = (rank: number) =>
     prizes.find((p) => p.rank === rank)?.prizeLabel || '$0';
 
   return (
     <main style={{ maxWidth: 1280, minHeight: '100vh', margin: '0 auto', padding: '26px 20px 80px' }}>
+
+      {/* HEADER */}
       <header style={{ display: 'flex', justifyContent: 'space-between', gap: 20, flexWrap: 'wrap', alignItems: 'flex-start' }}>
         <div>
           <div style={{
@@ -88,10 +87,6 @@ export default async function LeaderboardPage() {
           <h1 style={{ fontSize: 52, lineHeight: 0.95, margin: '14px 0 10px' }}>
             {settings.title}
           </h1>
-
-          <p style={{ maxWidth: 760, color: 'rgba(247,243,234,0.65)', fontSize: 17 }}>
-           
-          </p>
 
           <div style={{ marginTop: 14 }}>
             <SyncStatusBadge
@@ -116,6 +111,7 @@ export default async function LeaderboardPage() {
         </Link>
       </header>
 
+      {/* HERO CARD */}
       <section style={{ textAlign: 'center', marginTop: 20 }}>
         <div style={{
           display: 'inline-flex',
@@ -128,7 +124,7 @@ export default async function LeaderboardPage() {
           color: '#d7c18a',
           fontWeight: 700
         }}>
-          <Medal size={16} /> Live leaderboard layout
+          <Medal size={16} /> Live leaderboard
         </div>
 
         <div style={{
@@ -145,77 +141,42 @@ export default async function LeaderboardPage() {
                 How to enter
               </div>
               <div style={{ marginTop: 10, fontSize: 24, fontWeight: 900 }}>
-                Use code <span style={{ color: '#d7c18a' }}>{settings.codeLabel}</span> on {settings.casinoName}
-              </div>
-              <div style={{ marginTop: 6, color: 'rgba(247,243,234,0.72)' }}>
-                
+                Use code <span style={{ color: '#d7c18a' }}>{settings.codeLabel}</span>
               </div>
             </div>
 
-            {settings.logoUrl ? (
+            {/* LOGO — CLEAN (NO BOX) */}
+            {settings.logoUrl && (
               <img
                 src={settings.logoUrl}
                 alt="Logo"
                 style={{
-                  width: 70,
-                  height: 70,
+                  width: 110,
+                  height: 110,
                   objectFit: 'contain',
-                  borderRadius: 22,
-                  background: 'linear-gradient(180deg, #12283d, #0a1c2b)',
-                  padding: 10,
-                  border: '1px solid rgba(255,255,255,0.05)',
                   flexShrink: 0
                 }}
               />
-            ) : (
-              <div
-                style={{
-                  width: 70,
-                  height: 70,
-                  borderRadius: 22,
-                  background: 'linear-gradient(180deg, #12283d, #0a1c2b)',
-                  display: 'grid',
-                  placeItems: 'center',
-                  border: '1px solid rgba(255,255,255,0.05)',
-                  flexShrink: 0
-                }}
-              >
-                <div
-                  style={{
-                    width: 30,
-                    height: 30,
-                    borderRadius: 10,
-                    background: 'linear-gradient(180deg, #d7c18a, rgba(255,255,255,0.35))'
-                  }}
-                />
-              </div>
             )}
           </div>
         </div>
       </section>
 
+      {/* TOP 3 */}
       <section style={{ maxWidth: 1060, margin: '44px auto 0', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 32, alignItems: 'start' }}>
         <div style={{ marginTop: 40 }}><RankCard entry={second} prizeLabel={prize(2)} /></div>
         <div><RankCard entry={first} featured prizeLabel={prize(1)} /></div>
         <div style={{ marginTop: 56 }}><RankCard entry={third} prizeLabel={prize(3)} /></div>
       </section>
 
+      {/* TIMER */}
       <section style={{ display: 'flex', justifyContent: 'center', marginTop: 12 }}>
         <Countdown endAt={new Date(settings.endAt)} />
       </section>
 
+      {/* LIST */}
       <LeaderboardList entries={rest} />
 
-      <div style={{
-        maxWidth: 760,
-        margin: '26px auto 0',
-        textAlign: 'center',
-        color: 'rgba(247,243,234,0.42)',
-        fontSize: 12,
-        lineHeight: 1.6
-      }}>
-        Your wagers on Roobet count toward the leaderboard using weighted wagering. Slots and provably fair count. Higher RTP games contribute less to help prevent abuse.
-      </div>
     </main>
   );
 }
